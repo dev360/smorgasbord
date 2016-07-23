@@ -7,12 +7,12 @@ from django.conf import settings
 from django.conf.urls import include, url
 
 
-SMORGASBORD_REGISTRY = []
+TRAY_REGISTRY = []
 
 
-class SmorgasBordApp(object):
+class TrayApp(object):
     """
-    Represents your collection of smorgasbord
+    Represents your collection of tray
     enabled apps.
     """
     @property
@@ -25,15 +25,15 @@ class SmorgasBordApp(object):
 
     @property
     def registry(self):
-        return SMORGASBORD_REGISTRY
+        return TRAY_REGISTRY
 
     def register(self, app):
         """
-        Registers a smorgasbord app so that its webpack assets can
+        Registers a tray app so that its webpack assets can
         be built correctly
         """
-        if app not in SMORGASBORD_REGISTRY:
-            SMORGASBORD_REGISTRY.append(app)
+        if app not in TRAY_REGISTRY:
+            TRAY_REGISTRY.append(app)
 
     @property
     def apps(self):
@@ -47,14 +47,14 @@ class SmorgasBordApp(object):
         """
         app_dirs = []
         for app_name in self.apps:
-            app_dir = os.path.join(self.parent_dir, 'smorgasbord-{}'.format(app_name), app_name)
+            app_dir = os.path.join(self.parent_dir, 'tray-{}'.format(app_name), app_name)
             app_dirs.append(app_dir)
         return app_dirs
 
     def discover(self):
         """
-        Tries to auto discover smorgasbord apps whose repos
-        are sibling directories to the main smorgasbord app
+        Tries to auto discover tray apps whose repos
+        are sibling directories to the main tray app
         and then adds these into the sys path correctly.
         """
         INSTALLED_APPS = getattr(settings, 'INSTALLED_APPS')
@@ -64,7 +64,7 @@ class SmorgasBordApp(object):
         for path, dirs, files in list(os.walk(self.parent_dir)):
 
             for d in dirs:
-                app_name = d.replace('smorgasbord-', '') if 'smorgasbord-' in d else None
+                app_name = d.replace('tray-', '') if 'tray-' in d else None
                 if app_name and app_name in INSTALLED_APPS:
                     dir_path = path + '/' + d
                     paths.append(dir_path)
@@ -94,11 +94,11 @@ class SmorgasBordApp(object):
         Returns the static files directories
         """
         dirs = (
-            os.path.join(self.parent_dir, 'smorgasbord', 'client'),
+            os.path.join(self.parent_dir, 'tray', 'client'),
         )
 
         for app_dir in self.app_dirs:
             dirs += (app_dir + '/client',)
         return dirs
 
-app = SmorgasBordApp()
+app = TrayApp()

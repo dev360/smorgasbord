@@ -1,2 +1,3 @@
-# smorgasbord
-A smörgåsbord of production ready django components
+# Tray
+A tray of production-ready django components 
+
